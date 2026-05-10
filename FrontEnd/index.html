@@ -655,5 +655,318 @@
 
     renderSlots('midtown');
   </script>
+  <script>
+  const API = 'http://localhost:3000/api';
+
+  // ── Auth state ──────────────────────────────────────────
+  let currentUser = JSON.parse(localStorage.getItem('picklepro_user') || 'null');
+  let currentToken = localStorage.getItem('picklepro_token') || null;
+
+  // ── Load courts from API ─────────────────────────────────
+  async function loadCourts(city = 'Charlotte') {
+    try {
+      const res = await fetch(`${API}/courts?city=${city}`);
+      const courts = await res.json();
+      renderCourts(courts);
+    } catch (err) {
+      console.error('Failed to load courts:', err);
+    }
+  }
+
+  function renderCourts(courts) {
+    const container = document.getElementById('courts-container');
+    if (!container) return;
+    if (courts.length === 0) {
+      container.innerHTML = '<p style="text-align:center;padding:2rem;">No courts found in that area.</p>';
+      return;
+    }
+    container.innerHTML = courts.map(court => `
+      <div class="court-card" style="background:#fff;border-radius:16px;padding:1.5rem;border:1px solid #EAD9C0;margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:600;color:#1C3A08;">${court.name}</h3>
+            <p style="color:#666;font-size:.9rem;margin-top:.25rem;">${court.address}, ${court.city}</p>
+            <p style="color:#666;font-size:.85rem;margin-top:.25rem;">${court.amenities ? court.amenities.join(' · ') : ''}</p>
+          </div>
+          <div style="text-align:right;">
+            <p style="font-size:1.3rem;font-weight:700;color:#1C3A08;">$${court.price_per_hour}<span style="font-size:.8rem;font-weight:400;">/hr</span></p>
+          </div>
+        </div>
+        <button onclick="handleBooking('${court.id}', '${court.name}', ${court.price_per_hour})"
+          style="margin-top:1rem;width:100%;padding:.75rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:.95rem;">
+          Book a slot →
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ── Search bar ───────────────────────────────────────────
+  function setupSearch() {
+    const searchBtn = document.querySelector('button[class*="search"], .search-btn');
+    const locationInput = document.querySelector('input[placeholder*="Charlotte"], input[placeholder*="location"], input[placeholder*="Location"]');
+    
+    // Find search button by text content
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes('Search courts')) {
+        btn.addEventListener('click', () => {
+          const city = locationInput ? locationInput.value.split(',')[0].trim() : 'Charlotte';
+          loadCourts(city);
+          document.getElementById('courts-section')?.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
+  }
+
+  // ── Booking handler ──────────────────────────────────────
+  function handleBooking(courtId, courtName, price) {
+    if (!currentUser) {
+      showAuthModal('signup');
+      return;
+    }
+    showBookingModal(courtId, courtName, price);
+  }
+
+  // ── Auth Modal ───────────────────────────────────────────
+  function showAuthModal(mode = 'signup') {
+    const existing = document.getElementById('auth-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'auth-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+        <button onclick="document.getElementById('auth-modal').remove()" 
+          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+        <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:.5rem;">
+          ${mode === 'signup' ? 'Create your account' : 'Welcome back'}
+        </h2>
+        <p style="color:#666;margin-bottom:1.5rem;font-size:.9rem;">
+          ${mode === 'signup' ? 'Sign up to book pickleball courts' : 'Sign in to your PicklePro account'}
+        </p>
+        ${mode === 'signup' ? `
+          <input id="auth-name" type="text" placeholder="Full name" 
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+          <input id="auth-phone" type="tel" placeholder="Phone number" 
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+        ` : ''}
+        <input id="auth-email" type="email" placeholder="Email address" 
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+        <input id="auth-password" type="password" placeholder="Password" 
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:1rem;font-size:.95rem;box-sizing:border-box;">
+        <div id="auth-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+        <button onclick="${mode === 'signup' ? 'submitSignup()' : 'submitSignin()'}"
+          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
+          ${mode === 'signup' ? 'Create account' : 'Sign in'}
+        </button>
+        <p style="text-align:center;margin-top:1rem;font-size:.85rem;color:#666;">
+          ${mode === 'signup' 
+            ? `Already have an account? <a href="#" onclick="showAuthModal('signin');return false;" style="color:#1C3A08;font-weight:600;">Sign in</a>`
+            : `New to PicklePro? <a href="#" onclick="showAuthModal('signup');return false;" style="color:#1C3A08;font-weight:600;">Create account</a>`
+          }
+        </p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  async function submitSignup() {
+    const name = document.getElementById('auth-name')?.value;
+    const phone = document.getElementById('auth-phone')?.value;
+    const email = document.getElementById('auth-email')?.value;
+    const password = document.getElementById('auth-password')?.value;
+    const errEl = document.getElementById('auth-error');
+
+    try {
+      const res = await fetch(`${API}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, full_name: name, phone })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+      
+      document.getElementById('auth-modal').remove();
+      showAuthModal('signin');
+      alert('Account created! Please sign in.');
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  async function submitSignin() {
+    const email = document.getElementById('auth-email')?.value;
+    const password = document.getElementById('auth-password')?.value;
+    const errEl = document.getElementById('auth-error');
+
+    try {
+      const res = await fetch(`${API}/auth/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+
+      currentUser = data.user;
+      currentToken = data.token;
+      localStorage.setItem('picklepro_user', JSON.stringify(data.user));
+      localStorage.setItem('picklepro_token', data.token);
+      document.getElementById('auth-modal').remove();
+      updateNavForUser();
+      alert(`Welcome back!`);
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // ── Booking Modal ────────────────────────────────────────
+  function showBookingModal(courtId, courtName, price) {
+    const existing = document.getElementById('booking-modal');
+    if (existing) existing.remove();
+
+    const today = new Date().toISOString().split('T')[0];
+    const modal = document.createElement('div');
+    modal.id = 'booking-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+        <button onclick="document.getElementById('booking-modal').remove()"
+          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+        <h2 style="font-size:1.4rem;font-weight:700;color:#1C3A08;margin-bottom:.25rem;">${courtName}</h2>
+        <p style="color:#666;font-size:.9rem;margin-bottom:1.5rem;">$${price}/hr</p>
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Date</label>
+        <input id="booking-date" type="date" min="${today}" value="${today}"
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Start time</label>
+        <select id="booking-start" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
+          <option value="08:00">8:00 AM</option>
+          <option value="09:00">9:00 AM</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="13:00" selected>1:00 PM</option>
+          <option value="14:00">2:00 PM</option>
+          <option value="15:00">3:00 PM</option>
+          <option value="16:00">4:00 PM</option>
+          <option value="17:00">5:00 PM</option>
+        </select>
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Duration</label>
+        <select id="booking-duration" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1.5rem;font-size:.95rem;box-sizing:border-box;">
+          <option value="1">1 hour — $${price}</option>
+          <option value="2">2 hours — $${price * 2}</option>
+          <option value="3">3 hours — $${price * 3}</option>
+        </select>
+        <div id="booking-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+        <button onclick="submitBooking('${courtId}', ${price})"
+          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
+          Confirm booking →
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  async function submitBooking(courtId, pricePerHour) {
+    const date = document.getElementById('booking-date').value;
+    const startTime = document.getElementById('booking-start').value;
+    const duration = parseInt(document.getElementById('booking-duration').value);
+    const errEl = document.getElementById('booking-error');
+
+    const startHour = parseInt(startTime.split(':')[0]);
+    const endHour = startHour + duration;
+    const endTime = `${String(endHour).padStart(2, '0')}:00`;
+    const totalPrice = pricePerHour * duration;
+
+    try {
+      const res = await fetch(`${API}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: currentUser.id,
+          court_id: courtId,
+          date,
+          start_time: startTime,
+          end_time: endTime,
+          total_price: totalPrice
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+
+      document.getElementById('booking-modal').remove();
+      alert(`Booking confirmed! ${date} at ${startTime} for ${duration} hour(s). Total: $${totalPrice}`);
+    } catch (err) {
+      errEl.textContent = 'Booking failed. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // ── Update nav for logged in user ────────────────────────
+  function updateNavForUser() {
+    const nav = document.querySelector('nav, header');
+    if (!nav) return;
+    const existing = document.getElementById('user-nav-btn');
+    if (existing) existing.remove();
+
+    if (currentUser) {
+      const btn = document.createElement('button');
+      btn.id = 'user-nav-btn';
+      btn.textContent = `Hi, ${currentUser.email.split('@')[0]}`;
+      btn.style.cssText = 'padding:.5rem 1rem;background:#E4F3C8;color:#1C3A08;border:none;border-radius:999px;cursor:pointer;font-weight:600;margin-left:1rem;';
+      btn.onclick = () => {
+        localStorage.removeItem('picklepro_user');
+        localStorage.removeItem('picklepro_token');
+        currentUser = null;
+        currentToken = null;
+        location.reload();
+      };
+      nav.appendChild(btn);
+    }
+  }
+
+  // ── Add courts section to page ───────────────────────────
+  function addCourtsSection() {
+    const existing = document.getElementById('courts-section');
+    if (existing) return;
+
+    const section = document.createElement('section');
+    section.id = 'courts-section';
+    section.style.cssText = 'max-width:800px;margin:3rem auto;padding:0 1.5rem;';
+    section.innerHTML = `
+      <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:1.5rem;">Available Courts</h2>
+      <div id="courts-container">
+        <p style="text-align:center;color:#666;padding:2rem;">Loading courts...</p>
+      </div>
+    `;
+
+    const footer = document.querySelector('footer') || document.body.lastElementChild;
+    document.body.insertBefore(section, footer);
+  }
+
+  // ── Add sign in button to nav ────────────────────────────
+  function addSignInToNav() {
+    const findCourtBtn = Array.from(document.querySelectorAll('button, a')).find(el => 
+      el.textContent.includes('Find a court')
+    );
+    if (findCourtBtn && findCourtBtn.parentElement) {
+      const signInBtn = document.createElement('button');
+      signInBtn.textContent = currentUser ? `Hi, ${currentUser.email.split('@')[0]}` : 'Sign in';
+      signInBtn.style.cssText = 'padding:.5rem 1.25rem;background:transparent;color:#1C3A08;border:2px solid #1C3A08;border-radius:999px;cursor:pointer;font-weight:600;margin-right:.5rem;';
+      signInBtn.onclick = () => currentUser ? null : showAuthModal('signin');
+      findCourtBtn.parentElement.insertBefore(signInBtn, findCourtBtn);
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    addCourtsSection();
+    addSignInToNav();
+    loadCourts('Charlotte');
+    setupSearch();
+    updateNavForUser();
+  });
+</script>
 </body>
 </html>
