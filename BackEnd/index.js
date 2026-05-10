@@ -7,6 +7,7 @@ const bookingsRouter = require('./routes/bookings');
 const usersRouter = require('./routes/users');
 const reviewsRouter = require('./routes/reviews');
 const paymentsRouter = require('./routes/payments');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.use('/api/bookings', bookingsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/payments', paymentsRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'PicklePro API is running!' });
