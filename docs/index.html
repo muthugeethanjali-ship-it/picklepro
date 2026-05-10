@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PicklePro — Find & Book Pickleball Courts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:      #FDF6ED;
+      --cream-mid:  #EEF7DC;
+      --green-dark: #1C3A08;
+      --green-mid:  #2D5A0E;
+      --green-accent: #6AA329;
+      --green-light: #E4F3C8;
+      --border:     #EAD9C0;
+      --border-green: #D5E9B0;
+      --text-dark:  #111E06;
+      --text-mid:   #7A6448;
+      --text-muted: #9A8570;
+      --white:      #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--green-dark);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .logo em { font-style: italic; color: var(--green-accent); }
+    .nav-links { display: flex; gap: 32px; list-style: none; font-size: 14px; color: var(--text-mid); }
+    .nav-links a { color: inherit; text-decoration: none; }
+    .nav-links a:hover { color: var(--green-dark); }
+    .nav-cta {
+      background: var(--green-dark);
+      color: var(--cream);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--green-mid); }
+
+    /* ── HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 55fr 45fr;
+      min-height: 400px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-left {
+      padding: 52px 48px 52px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-light);
+      color: var(--green-mid);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      width: fit-content;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-accent); }
+    .headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      line-height: 1.07;
+      color: var(--text-dark);
+      letter-spacing: -0.025em;
+    }
+    .headline em { font-style: italic; color: var(--green-accent); }
+    .subheadline {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    /* Search bar */
+    .search {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    }
+    .search-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); }
+    .field-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #FAF7F2;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 13px;
+      color: var(--green-dark);
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .field-inner:hover { border-color: var(--green-accent); }
+    .field-icon { font-size: 16px; opacity: 0.6; }
+    .search-btn {
+      background: var(--green-dark);
+      color: var(--cream);
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .search-btn:hover { background: var(--green-mid); }
+
+    /* Hero right / slot picker */
+    .hero-right {
+      background: var(--cream-mid);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 36px;
+      gap: 18px;
+    }
+    .picker-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--green-dark); }
+    .picker-sub { font-size: 12px; color: #7A9450; margin-top: 4px; }
+    .court-tabs { display: flex; gap: 7px; flex-wrap: wrap; }
+    .ctab {
+      border: 1.5px solid #C8DFA0;
+      background: var(--white);
+      color: #3A6014;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 15px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .ctab:hover { border-color: var(--green-accent); }
+    .ctab.active { background: var(--green-dark); border-color: var(--green-dark); color: white; }
+    .slots-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: #8A9E70; margin-bottom: 9px; }
+    .slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+    .slot {
+      border: 1.5px solid #C8DFA0;
+      background: var(--white);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .slot:hover:not(.na) { border-color: var(--green-accent); background: #F5FAF0; }
+    .slot.sel { background: var(--green-accent); border-color: var(--green-accent); color: white; }
+    .slot.na { background: #F5F3EE; border-color: #E0D8CC; color: #C0B8A8; text-decoration: line-through; cursor: default; }
+    .book-strip {
+      background: var(--green-dark);
+      color: white;
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .book-strip:hover { background: var(--green-mid); }
+    .book-strip-label { font-size: 12px; color: #9ACA60; margin-bottom: 4px; }
+    .book-strip-price { font-family: 'Playfair Display', serif; font-size: 26px; color: white; }
+    .book-strip-price span { font-size: 14px; color: #7AAA50; font-family: 'DM Sans', sans-serif; }
+    .book-strip-btn {
+      background: var(--green-accent);
+      color: white;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .book-strip-btn:hover { background: #5A9020; }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--green-dark);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ticker-item {
+      padding: 18px 28px;
+      border-right: 1px solid #2A4F12;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .ticker-item:last-child { border-right: none; }
+    .ticker-icon { font-size: 24px; opacity: 0.65; flex-shrink: 0; }
+    .ticker-num { font-family: 'Playfair Display', serif; font-size: 24px; color: #C8F290; letter-spacing: -0.01em; line-height: 1; }
+    .ticker-label { font-size: 11px; color: #7AAA50; margin-top: 4px; line-height: 1.4; }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 48px; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .section-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); }
+    .section-link { font-size: 14px; color: var(--green-accent); text-decoration: underline; text-underline-offset: 3px; background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .section-link:hover { color: var(--green-mid); }
+
+    /* ── COURT GRID ── */
+    .court-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .court-card {
+      background: var(--white);
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .court-card:hover { box-shadow: 0 10px 36px rgba(0,0,0,0.09); transform: translateY(-2px); }
+    .court-img { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+    .court-img.green  { background: #E4F3C8; }
+    .court-img.yellow { background: #FFF3CC; }
+    .court-img.blue   { background: #E0F0FF; }
+    .court-img.peach  { background: #FFEEDD; }
+    .court-body { padding: 18px; }
+    .court-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text-dark); margin-bottom: 5px; }
+    .court-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+    .court-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F0E8DC; padding-top: 12px; }
+    .court-price { font-size: 14px; font-weight: 600; color: var(--green-dark); }
+    .court-price span { font-size: 11px; font-weight: 400; color: var(--text-muted); }
+    .avail-chip { font-size: 10px; font-weight: 600; padding: 4px 11px; border-radius: 100px; }
+    .avail-chip.open { background: var(--green-light); color: var(--green-mid); }
+    .avail-chip.wait { background: #FFF3CC; color: #8A6A00; }
+
+    /* ── LIVE AVAILABILITY ── */
+    .avail-section { padding: 0 48px 52px; }
+    .avail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .avail-card {
+      background: var(--white);
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .avail-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
+    .avail-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .avail-card-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text-dark); line-height: 1.2; }
+    .avail-card-distance { font-size: 11px; color: #B0A090; margin-top: 4px; }
+    .avail-card-tag { font-size: 10px; font-weight: 600; padding: 4px 11px; border-radius: 100px; white-space: nowrap; flex-shrink: 0; }
+    .avail-card-tag.live { background: var(--green-light); color: var(--green-mid); }
+    .avail-card-tag.busy { background: #FFEEDD; color: #8A4A00; }
+    .mini-slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+    .mini-slot {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 0;
+      border-radius: 8px;
+      border: 1.5px solid #D5E9B0;
+      color: var(--green-dark);
+      background: #F5FAF0;
+      text-align: center;
+    }
+    .mini-slot.taken { border-color: #EAD9C0; color: #C0B0A0; background: #FAF7F3; text-decoration: line-through; }
+    .avail-card-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F0E8DC; padding-top: 14px; }
+    .avail-card-price { font-size: 14px; font-weight: 600; color: var(--green-dark); }
+    .avail-card-price span { font-size: 11px; font-weight: 400; color: var(--text-muted); }
+    .avail-card-btn {
+      background: var(--green-dark);
+      color: white;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .avail-card-btn:hover { background: var(--green-mid); }
+
+    /* ── FOOTER CTA ── */
+    .footer-cta {
+      background: var(--cream-mid);
+      border-top: 1px solid var(--border-green);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 60fr 40fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .footer-cta-heading { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--text-dark); margin-bottom: 8px; }
+    .footer-cta-heading em { font-style: italic; color: var(--green-accent); }
+    .footer-cta-sub { font-size: 14px; color: var(--text-mid); line-height: 1.65; max-width: 480px; }
+    .footer-cta-actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+    .footer-btn-primary {
+      background: var(--green-dark);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      width: fit-content;
+      transition: background 0.2s;
+    }
+    .footer-btn-primary:hover { background: var(--green-mid); }
+    .footer-btn-ghost {
+      border: 1.5px solid #B8CFA0;
+      background: transparent;
+      color: var(--green-mid);
+      padding: 12px 26px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      width: fit-content;
+      transition: border-color 0.2s;
+    }
+    .footer-btn-ghost:hover { border-color: var(--green-accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 36px 24px; border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-right { padding: 28px 24px; }
+      .search-fields { grid-template-columns: 1fr; }
+      .ticker { grid-template-columns: repeat(2, 1fr); }
+      .ticker-item:nth-child(2) { border-right: none; }
+      .section { padding: 32px 24px; }
+      .court-grid { grid-template-columns: 1fr; }
+      .avail-section { padding: 0 24px 40px; }
+      .avail-grid { grid-template-columns: 1fr; }
+      .footer-cta { grid-template-columns: 1fr; padding: 36px 24px; }
+      .footer-cta-actions { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="logo">Pickle<em>Pro</em></a>
+    <ul class="nav-links">
+      <li><a href="#">Courts</a></li>
+      <li><a href="#">How it works</a></li>
+      <li><a href="#">For owners</a></li>
+    </ul>
+    <button class="nav-cta">Find a court →</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="eyebrow"><div class="eyebrow-dot"></div>Charlotte, NC — Now live</div>
+      <h1 class="headline">Your next game<br>starts <em>here.</em></h1>
+      <p class="subheadline">Find, book, and play at the best private pickleball courts near you — in seconds, not phone calls.</p>
+      <div class="search">
+        <div class="search-fields">
+          <div class="field">
+            <label>Location</label>
+            <div class="field-inner"><span class="field-icon">📍</span>Charlotte, NC</div>
+          </div>
+          <div class="field">
+            <label>Date</label>
+            <div class="field-inner"><span class="field-icon">📅</span>Today, May 7</div>
+          </div>
+          <div class="field">
+            <label>Duration</label>
+            <div class="field-inner"><span class="field-icon">⏱</span>1 hour</div>
+          </div>
+        </div>
+        <button class="search-btn">🔍 &nbsp;Search courts</button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div>
+        <div class="picker-title">Quick book a court</div>
+        <div class="picker-sub">Pick a venue, then choose your time</div>
+      </div>
+      <div class="court-tabs">
+        <button class="ctab active" onclick="selectCourt(this,'midtown')">Midtown</button>
+        <button class="ctab" onclick="selectCourt(this,'southpark')">Southpark</button>
+        <button class="ctab" onclick="selectCourt(this,'noda')">NoDa</button>
+      </div>
+      <div>
+        <div class="slots-label">Available times</div>
+        <div class="slots" id="slot-grid"></div>
+      </div>
+      <div class="book-strip">
+        <div>
+          <div class="book-strip-label" id="strip-label">Midtown Courts · 1:00 PM</div>
+          <div class="book-strip-price" id="strip-price">$18 <span>/ hr</span></div>
+        </div>
+        <button class="book-strip-btn">Book now →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-item">
+      <div class="ticker-icon">🏓</div>
+      <div><div class="ticker-num">1,247</div><div class="ticker-label">Games booked<br>this month</div></div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-icon">📍</div>
+      <div><div class="ticker-num">24</div><div class="ticker-label">Private courts<br>listed</div></div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-icon">⭐</div>
+      <div><div class="ticker-num">4.9★</div><div class="ticker-label">Average court<br>rating</div></div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-icon">⚡</div>
+      <div><div class="ticker-num">~3 min</div><div class="ticker-label">Average booking<br>time</div></div>
+    </div>
+  </div>
+
+  <!-- COURT GRID -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Courts near you</div>
+      <button class="section-link">View all courts →</button>
+    </div>
+    <div class="court-grid">
+      <div class="court-card">
+        <div class="court-img green">🏓</div>
+        <div class="court-body">
+          <div class="court-name">Midtown Indoor Courts</div>
+          <div class="court-meta">Indoor · 4 courts · 0.8 mi away</div>
+          <div class="court-footer">
+            <div class="court-price">$18 <span>/ hr</span></div>
+            <div class="avail-chip open">● Open now</div>
+          </div>
+        </div>
+      </div>
+      <div class="court-card">
+        <div class="court-img yellow">🌤️</div>
+        <div class="court-body">
+          <div class="court-name">Southpark Club</div>
+          <div class="court-meta">Outdoor · 6 courts · 2.1 mi away</div>
+          <div class="court-footer">
+            <div class="court-price">$22 <span>/ hr</span></div>
+            <div class="avail-chip open">● Open now</div>
+          </div>
+        </div>
+      </div>
+      <div class="court-card">
+        <div class="court-img blue">🏢</div>
+        <div class="court-body">
+          <div class="court-name">NoDa Sports Complex</div>
+          <div class="court-meta">Indoor · 2 courts · 3.4 mi away</div>
+          <div class="court-footer">
+            <div class="court-price">$15 <span>/ hr</span></div>
+            <div class="avail-chip wait">⏳ Waitlist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE AVAILABILITY -->
+  <div class="avail-section">
+    <div class="section-header">
+      <div class="section-eyebrow">Live availability today</div>
+      <button class="section-link">See full schedule →</button>
+    </div>
+    <div class="avail-grid">
+      <div class="avail-card">
+        <div class="avail-card-header">
+          <div><div class="avail-card-name">Midtown Indoor Courts</div><div class="avail-card-distance">0.8 mi · Indoor</div></div>
+          <div class="avail-card-tag live">● Live</div>
+        </div>
+        <div class="mini-slots">
+          <div class="mini-slot taken">8 AM</div><div class="mini-slot taken">9 AM</div><div class="mini-slot">10 AM</div>
+          <div class="mini-slot">11 AM</div><div class="mini-slot taken">1 PM</div><div class="mini-slot">2 PM</div>
+        </div>
+        <div class="avail-card-footer">
+          <div class="avail-card-price">$18 <span>/ hr</span></div>
+          <button class="avail-card-btn">Book a slot →</button>
+        </div>
+      </div>
+      <div class="avail-card">
+        <div class="avail-card-header">
+          <div><div class="avail-card-name">Southpark Club</div><div class="avail-card-distance">2.1 mi · Outdoor</div></div>
+          <div class="avail-card-tag live">● Live</div>
+        </div>
+        <div class="mini-slots">
+          <div class="mini-slot">8 AM</div><div class="mini-slot">9 AM</div><div class="mini-slot taken">10 AM</div>
+          <div class="mini-slot taken">11 AM</div><div class="mini-slot">1 PM</div><div class="mini-slot taken">2 PM</div>
+        </div>
+        <div class="avail-card-footer">
+          <div class="avail-card-price">$22 <span>/ hr</span></div>
+          <button class="avail-card-btn">Book a slot →</button>
+        </div>
+      </div>
+      <div class="avail-card">
+        <div class="avail-card-header">
+          <div><div class="avail-card-name">NoDa Sports Complex</div><div class="avail-card-distance">3.4 mi · Indoor</div></div>
+          <div class="avail-card-tag busy">Filling fast</div>
+        </div>
+        <div class="mini-slots">
+          <div class="mini-slot taken">8 AM</div><div class="mini-slot taken">9 AM</div><div class="mini-slot taken">10 AM</div>
+          <div class="mini-slot">11 AM</div><div class="mini-slot taken">1 PM</div><div class="mini-slot taken">2 PM</div>
+        </div>
+        <div class="avail-card-footer">
+          <div class="avail-card-price">$15 <span>/ hr</span></div>
+          <button class="avail-card-btn">Join waitlist →</button>
+        </div>
+      </div>
+      <div class="avail-card">
+        <div class="avail-card-header">
+          <div><div class="avail-card-name">Ballantyne Rec Center</div><div class="avail-card-distance">4.9 mi · Outdoor</div></div>
+          <div class="avail-card-tag live">● Live</div>
+        </div>
+        <div class="mini-slots">
+          <div class="mini-slot">8 AM</div><div class="mini-slot taken">9 AM</div><div class="mini-slot">10 AM</div>
+          <div class="mini-slot">11 AM</div><div class="mini-slot">1 PM</div><div class="mini-slot taken">2 PM</div>
+        </div>
+        <div class="avail-card-footer">
+          <div class="avail-card-price">$20 <span>/ hr</span></div>
+          <button class="avail-card-btn">Book a slot →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER CTA -->
+  <section class="footer-cta">
+    <div>
+      <div class="footer-cta-heading">Own a court? <em>List it free.</em></div>
+      <p class="footer-cta-sub">Join 24 court owners already filling their schedule through PicklePro. Setup takes under 10 minutes — no technical knowledge needed.</p>
+    </div>
+    <div class="footer-cta-actions">
+      <button class="footer-btn-primary">List my court →</button>
+      <button class="footer-btn-ghost">Learn how it works</button>
+    </div>
+  </section>
+
+  <script>
+    const courts = {
+      midtown:   { name: 'Midtown Courts',  price: '$18', slots: ['na','na','open','open','sel','open','na','open'] },
+      southpark: { name: 'Southpark Club',  price: '$22', slots: ['open','open','na','open','open','na','open','na'] },
+      noda:      { name: 'NoDa Sports',     price: '$15', slots: ['na','na','na','open','na','open','na','open'] }
+    };
+    const times = ['8 AM','9 AM','10 AM','11 AM','1 PM','2 PM','4 PM','5 PM'];
+    let activeCourt = 'midtown';
+    let activeIdx = 4;
+
+    function renderSlots(key) {
+      const grid = document.getElementById('slot-grid');
+      grid.innerHTML = '';
+      courts[key].slots.forEach((s, i) => {
+        const el = document.createElement('div');
+        el.className = 'slot' + (s === 'na' ? ' na' : s === 'sel' ? ' sel' : '');
+        el.textContent = times[i];
+        if (s !== 'na') {
+          el.addEventListener('click', () => {
+            grid.querySelectorAll('.slot:not(.na)').forEach(x => x.classList.remove('sel'));
+            el.classList.add('sel');
+            activeIdx = i;
+            updateStrip();
+          });
+        }
+        grid.appendChild(el);
+      });
+      updateStrip();
+    }
+
+    function selectCourt(btn, key) {
+      document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCourt = key;
+      activeIdx = courts[key].slots.findIndex(s => s === 'sel' || s === 'open');
+      courts[key].slots = courts[key].slots.map((s, i) =>
+        i === activeIdx && s !== 'na' ? 'sel' : (s === 'sel' ? 'open' : s)
+      );
+      renderSlots(key);
+    }
+
+    function updateStrip() {
+      const d = courts[activeCourt];
+      document.getElementById('strip-label').textContent = d.name + ' · ' + times[activeIdx];
+      document.getElementById('strip-price').innerHTML = d.price + ' <span style="font-size:14px;color:#7AAA50;font-family:\'DM Sans\',sans-serif;">/ hr</span>';
+    }
+
+    renderSlots('midtown');
+  </script>
+  <script>
+  const API = 'https://picklepro-x5mi.onrender.com/api';
+
+  // ── Auth state ──────────────────────────────────────────
+  let currentUser = JSON.parse(localStorage.getItem('picklepro_user') || 'null');
+  let currentToken = localStorage.getItem('picklepro_token') || null;
+
+  // ── Load courts from API ─────────────────────────────────
+  async function loadCourts(city = 'Charlotte') {
+    try {
+      const res = await fetch(`${API}/courts?city=${city}`);
+      const courts = await res.json();
+      renderCourts(courts);
+    } catch (err) {
+      console.error('Failed to load courts:', err);
+    }
+  }
+
+  function renderCourts(courts) {
+    const container = document.getElementById('courts-container');
+    if (!container) return;
+    if (courts.length === 0) {
+      container.innerHTML = '<p style="text-align:center;padding:2rem;">No courts found in that area.</p>';
+      return;
+    }
+    container.innerHTML = courts.map(court => `
+      <div class="court-card" style="background:#fff;border-radius:16px;padding:1.5rem;border:1px solid #EAD9C0;margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:600;color:#1C3A08;">${court.name}</h3>
+            <p style="color:#666;font-size:.9rem;margin-top:.25rem;">${court.address}, ${court.city}</p>
+            <p style="color:#666;font-size:.85rem;margin-top:.25rem;">${court.amenities ? court.amenities.join(' · ') : ''}</p>
+          </div>
+          <div style="text-align:right;">
+            <p style="font-size:1.3rem;font-weight:700;color:#1C3A08;">$${court.price_per_hour}<span style="font-size:.8rem;font-weight:400;">/hr</span></p>
+          </div>
+        </div>
+        <button onclick="handleBooking('${court.id}', '${court.name}', ${court.price_per_hour})"
+          style="margin-top:1rem;width:100%;padding:.75rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:.95rem;">
+          Book a slot →
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ── Search bar ───────────────────────────────────────────
+  function setupSearch() {
+    const searchBtn = document.querySelector('button[class*="search"], .search-btn');
+    const locationInput = document.querySelector('input[placeholder*="Charlotte"], input[placeholder*="location"], input[placeholder*="Location"]');
+    
+    // Find search button by text content
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes('Search courts')) {
+        btn.addEventListener('click', () => {
+          const city = locationInput ? locationInput.value.split(',')[0].trim() : 'Charlotte';
+          loadCourts(city);
+          document.getElementById('courts-section')?.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
+  }
+
+  // ── Booking handler ──────────────────────────────────────
+  function handleBooking(courtId, courtName, price) {
+    if (!currentUser) {
+      showAuthModal('signup');
+      return;
+    }
+    showBookingModal(courtId, courtName, price);
+  }
+
+  // ── Auth Modal ───────────────────────────────────────────
+  function showAuthModal(mode = 'signup') {
+    const existing = document.getElementById('auth-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'auth-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+        <button onclick="document.getElementById('auth-modal').remove()" 
+          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+        <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:.5rem;">
+          ${mode === 'signup' ? 'Create your account' : 'Welcome back'}
+        </h2>
+        <p style="color:#666;margin-bottom:1.5rem;font-size:.9rem;">
+          ${mode === 'signup' ? 'Sign up to book pickleball courts' : 'Sign in to your PicklePro account'}
+        </p>
+        ${mode === 'signup' ? `
+          <input id="auth-name" type="text" placeholder="Full name" 
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+          <input id="auth-phone" type="tel" placeholder="Phone number" 
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+        ` : ''}
+        <input id="auth-email" type="email" placeholder="Email address" 
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
+        <input id="auth-password" type="password" placeholder="Password" 
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:1rem;font-size:.95rem;box-sizing:border-box;">
+        <div id="auth-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+        <button onclick="${mode === 'signup' ? 'submitSignup()' : 'submitSignin()'}"
+          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
+          ${mode === 'signup' ? 'Create account' : 'Sign in'}
+        </button>
+        <p style="text-align:center;margin-top:1rem;font-size:.85rem;color:#666;">
+          ${mode === 'signup' 
+            ? `Already have an account? <a href="#" onclick="showAuthModal('signin');return false;" style="color:#1C3A08;font-weight:600;">Sign in</a>`
+            : `New to PicklePro? <a href="#" onclick="showAuthModal('signup');return false;" style="color:#1C3A08;font-weight:600;">Create account</a>`
+          }
+        </p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  async function submitSignup() {
+    const name = document.getElementById('auth-name')?.value;
+    const phone = document.getElementById('auth-phone')?.value;
+    const email = document.getElementById('auth-email')?.value;
+    const password = document.getElementById('auth-password')?.value;
+    const errEl = document.getElementById('auth-error');
+
+    try {
+      const res = await fetch(`${API}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, full_name: name, phone })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+      
+      document.getElementById('auth-modal').remove();
+      showAuthModal('signin');
+      alert('Account created! Please sign in.');
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  async function submitSignin() {
+    const email = document.getElementById('auth-email')?.value;
+    const password = document.getElementById('auth-password')?.value;
+    const errEl = document.getElementById('auth-error');
+
+    try {
+      const res = await fetch(`${API}/auth/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+
+      currentUser = data.user;
+      currentToken = data.token;
+      localStorage.setItem('picklepro_user', JSON.stringify(data.user));
+      localStorage.setItem('picklepro_token', data.token);
+      document.getElementById('auth-modal').remove();
+      updateNavForUser();
+      alert(`Welcome back!`);
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // ── Booking Modal ────────────────────────────────────────
+  function showBookingModal(courtId, courtName, price) {
+    const existing = document.getElementById('booking-modal');
+    if (existing) existing.remove();
+
+    const today = new Date().toISOString().split('T')[0];
+    const modal = document.createElement('div');
+    modal.id = 'booking-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+        <button onclick="document.getElementById('booking-modal').remove()"
+          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+        <h2 style="font-size:1.4rem;font-weight:700;color:#1C3A08;margin-bottom:.25rem;">${courtName}</h2>
+        <p style="color:#666;font-size:.9rem;margin-bottom:1.5rem;">$${price}/hr</p>
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Date</label>
+        <input id="booking-date" type="date" min="${today}" value="${today}"
+          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Start time</label>
+        <select id="booking-start" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
+          <option value="08:00">8:00 AM</option>
+          <option value="09:00">9:00 AM</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="13:00" selected>1:00 PM</option>
+          <option value="14:00">2:00 PM</option>
+          <option value="15:00">3:00 PM</option>
+          <option value="16:00">4:00 PM</option>
+          <option value="17:00">5:00 PM</option>
+        </select>
+        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Duration</label>
+        <select id="booking-duration" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1.5rem;font-size:.95rem;box-sizing:border-box;">
+          <option value="1">1 hour — $${price}</option>
+          <option value="2">2 hours — $${price * 2}</option>
+          <option value="3">3 hours — $${price * 3}</option>
+        </select>
+        <div id="booking-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+        <button onclick="submitBooking('${courtId}', ${price})"
+          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
+          Confirm booking →
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  async function submitBooking(courtId, pricePerHour) {
+    const date = document.getElementById('booking-date').value;
+    const startTime = document.getElementById('booking-start').value;
+    const duration = parseInt(document.getElementById('booking-duration').value);
+    const errEl = document.getElementById('booking-error');
+
+    const startHour = parseInt(startTime.split(':')[0]);
+    const endHour = startHour + duration;
+    const endTime = `${String(endHour).padStart(2, '0')}:00`;
+    const totalPrice = pricePerHour * duration;
+
+    try {
+      const res = await fetch(`${API}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: currentUser.id,
+          court_id: courtId,
+          date,
+          start_time: startTime,
+          end_time: endTime,
+          total_price: totalPrice
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+
+      document.getElementById('booking-modal').remove();
+      alert(`Booking confirmed! ${date} at ${startTime} for ${duration} hour(s). Total: $${totalPrice}`);
+    } catch (err) {
+      errEl.textContent = 'Booking failed. Try again.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // ── Update nav for logged in user ────────────────────────
+  function updateNavForUser() {
+    const nav = document.querySelector('nav, header');
+    if (!nav) return;
+    const existing = document.getElementById('user-nav-btn');
+    if (existing) existing.remove();
+
+    if (currentUser) {
+      const btn = document.createElement('button');
+      btn.id = 'user-nav-btn';
+      btn.textContent = `Hi, ${currentUser.email.split('@')[0]}`;
+      btn.style.cssText = 'padding:.5rem 1rem;background:#E4F3C8;color:#1C3A08;border:none;border-radius:999px;cursor:pointer;font-weight:600;margin-left:1rem;';
+      btn.onclick = () => {
+        localStorage.removeItem('picklepro_user');
+        localStorage.removeItem('picklepro_token');
+        currentUser = null;
+        currentToken = null;
+        location.reload();
+      };
+      nav.appendChild(btn);
+    }
+  }
+
+  // ── Add courts section to page ───────────────────────────
+  function addCourtsSection() {
+    const existing = document.getElementById('courts-section');
+    if (existing) return;
+
+    const section = document.createElement('section');
+    section.id = 'courts-section';
+    section.style.cssText = 'max-width:800px;margin:3rem auto;padding:0 1.5rem;';
+    section.innerHTML = `
+      <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:1.5rem;">Available Courts</h2>
+      <div id="courts-container">
+        <p style="text-align:center;color:#666;padding:2rem;">Loading courts...</p>
+      </div>
+    `;
+
+    const footer = document.querySelector('footer') || document.body.lastElementChild;
+    document.body.insertBefore(section, footer);
+  }
+
+  // ── Add sign in button to nav ────────────────────────────
+  function addSignInToNav() {
+    const findCourtBtn = Array.from(document.querySelectorAll('button, a')).find(el => 
+      el.textContent.includes('Find a court')
+    );
+    if (findCourtBtn && findCourtBtn.parentElement) {
+      const signInBtn = document.createElement('button');
+      signInBtn.textContent = currentUser ? `Hi, ${currentUser.email.split('@')[0]}` : 'Sign in';
+      signInBtn.style.cssText = 'padding:.5rem 1.25rem;background:transparent;color:#1C3A08;border:2px solid #1C3A08;border-radius:999px;cursor:pointer;font-weight:600;margin-right:.5rem;';
+      signInBtn.onclick = () => currentUser ? null : showAuthModal('signin');
+      findCourtBtn.parentElement.insertBefore(signInBtn, findCourtBtn);
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    addCourtsSection();
+    addSignInToNav();
+    loadCourts('Charlotte');
+    setupSearch();
+    updateNavForUser();
+  });
+</script>
+</body>
+</html>
