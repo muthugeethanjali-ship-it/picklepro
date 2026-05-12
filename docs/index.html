@@ -401,23 +401,7 @@
       .footer-cta { grid-template-columns: 1fr; padding: 36px 24px; }
       .footer-cta-actions { align-items: flex-start; }
     }
-    .field-inner input,
-.field-inner select {
-  border: none !important;
-  background: transparent !important;
-  outline: none !important;
-  font-size: 13px !important;
-  width: 100% !important;
-  cursor: pointer !important;
-  color: var(--green-dark) !important;
-  font-weight: 500 !important;
-  font-family: inherit !important;
-  pointer-events: all !important;
-}
-.field-inner {
-  pointer-events: all !important;
-  cursor: pointer !important;
-}
+    
   </style>
   
 </head>
@@ -444,8 +428,8 @@
         <div class="search-fields">
           <div class="field">
             <label>Location</label>
-<div class="field-inner"><span class="field-icon">📍</span><input id="location-input" type="text" value="Charlotte, NC" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:text;" placeholder="City, State"/></div>          </div>
-          <div class="field">
+<div class="field-inner"><span class="field-icon">📍</span><select id="location-input" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:pointer;color:inherit;font-family:inherit;font-weight:500;"><option value="Charlotte">Charlotte, NC</option><option value="Raleigh">Raleigh, NC</option><option value="Durham">Durham, NC</option><option value="Greensboro">Greensboro, NC</option><option value="Winston-Salem">Winston-Salem, NC</option><option value="Fayetteville">Fayetteville, NC</option><option value="Cary">Cary, NC</option><option value="Wilmington">Wilmington, NC</option><option value="High Point">High Point, NC</option><option value="Concord">Concord, NC</option><option value="Asheville">Asheville, NC</option><option value="Chapel Hill">Chapel Hill, NC</option><option value="Huntersville">Huntersville, NC</option><option value="Apex">Apex, NC</option><option value="Gastonia">Gastonia, NC</option></select></div>
+            <div class="field">
             <label>Date</label>
 <div class="field-inner"><span class="field-icon">📅</span><input id="date-input" type="date" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:pointer;"/></div>          </div>
           <div class="field">
