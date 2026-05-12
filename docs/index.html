@@ -11,18 +11,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:      #FDF6ED;
-      --cream-mid:  #EEF7DC;
-      --green-dark: #1C3A08;
-      --green-mid:  #2D5A0E;
+      --cream:        #FDF6ED;
+      --cream-mid:    #EEF7DC;
+      --green-dark:   #1C3A08;
+      --green-mid:    #2D5A0E;
       --green-accent: #6AA329;
-      --green-light: #E4F3C8;
-      --border:     #EAD9C0;
+      --green-light:  #E4F3C8;
+      --border:       #EAD9C0;
       --border-green: #D5E9B0;
-      --text-dark:  #111E06;
-      --text-mid:   #7A6448;
-      --text-muted: #9A8570;
-      --white:      #ffffff;
+      --text-dark:    #111E06;
+      --text-mid:     #7A6448;
+      --text-muted:   #9A8570;
+      --white:        #ffffff;
     }
 
     html { scroll-behavior: smooth; }
@@ -57,6 +57,7 @@
     .nav-links { display: flex; gap: 32px; list-style: none; font-size: 14px; color: var(--text-mid); }
     .nav-links a { color: inherit; text-decoration: none; }
     .nav-links a:hover { color: var(--green-dark); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
     .nav-cta {
       background: var(--green-dark);
       color: var(--cream);
@@ -71,20 +72,24 @@
     }
     .nav-cta:hover { background: var(--green-mid); }
 
-    /* ── HERO ── */
+    /* ── HERO — full width ── */
     .hero {
-      display: grid;
-      grid-template-columns: 55fr 45fr;
-      min-height: 400px;
+      min-height: 480px;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      background: linear-gradient(135deg, var(--cream) 60%, var(--cream-mid) 100%);
     }
-    .hero-left {
-      padding: 52px 48px 52px;
+    .hero-inner {
+      max-width: 860px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 22px;
-      justify-content: center;
-      border-right: 1px solid var(--border);
+      gap: 24px;
+      align-items: center;
+      text-align: center;
     }
     .eyebrow {
       display: inline-flex;
@@ -103,29 +108,30 @@
     .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-accent); }
     .headline {
       font-family: 'Playfair Display', serif;
-      font-size: 52px;
+      font-size: 58px;
       line-height: 1.07;
       color: var(--text-dark);
       letter-spacing: -0.025em;
     }
     .headline em { font-style: italic; color: var(--green-accent); }
     .subheadline {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--text-mid);
       line-height: 1.7;
-      max-width: 400px;
+      max-width: 500px;
     }
 
     /* Search bar */
     .search {
       background: var(--white);
-      border-radius: 16px;
+      border-radius: 20px;
       border: 1.5px solid var(--border);
-      padding: 18px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      width: 100%;
     }
     .search-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .field { display: flex; flex-direction: column; gap: 6px; }
@@ -145,15 +151,27 @@
       transition: border-color 0.15s;
     }
     .field-inner:hover { border-color: var(--green-accent); }
-    .field-icon { font-size: 16px; opacity: 0.6; }
+    .field-inner select,
+    .field-inner input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 13px;
+      width: 100%;
+      cursor: pointer;
+      color: var(--green-dark);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+    }
+    .field-icon { font-size: 16px; opacity: 0.6; flex-shrink: 0; }
     .search-btn {
       background: var(--green-dark);
       color: var(--cream);
       border: none;
-      padding: 13px;
-      border-radius: 10px;
+      padding: 14px;
+      border-radius: 12px;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -163,79 +181,6 @@
       transition: background 0.2s;
     }
     .search-btn:hover { background: var(--green-mid); }
-
-    /* Hero right / slot picker */
-    .hero-right {
-      background: var(--cream-mid);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 40px 36px;
-      gap: 18px;
-    }
-    .picker-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--green-dark); }
-    .picker-sub { font-size: 12px; color: #7A9450; margin-top: 4px; }
-    .court-tabs { display: flex; gap: 7px; flex-wrap: wrap; }
-    .ctab {
-      border: 1.5px solid #C8DFA0;
-      background: var(--white);
-      color: #3A6014;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 15px;
-      border-radius: 100px;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .ctab:hover { border-color: var(--green-accent); }
-    .ctab.active { background: var(--green-dark); border-color: var(--green-dark); color: white; }
-    .slots-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: #8A9E70; margin-bottom: 9px; }
-    .slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-    .slot {
-      border: 1.5px solid #C8DFA0;
-      background: var(--white);
-      color: var(--green-dark);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 8px 0;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-align: center;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .slot:hover:not(.na) { border-color: var(--green-accent); background: #F5FAF0; }
-    .slot.sel { background: var(--green-accent); border-color: var(--green-accent); color: white; }
-    .slot.na { background: #F5F3EE; border-color: #E0D8CC; color: #C0B8A8; text-decoration: line-through; cursor: default; }
-    .book-strip {
-      background: var(--green-dark);
-      color: white;
-      border-radius: 14px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .book-strip:hover { background: var(--green-mid); }
-    .book-strip-label { font-size: 12px; color: #9ACA60; margin-bottom: 4px; }
-    .book-strip-price { font-family: 'Playfair Display', serif; font-size: 26px; color: white; }
-    .book-strip-price span { font-size: 14px; color: #7AAA50; font-family: 'DM Sans', sans-serif; }
-    .book-strip-btn {
-      background: var(--green-accent);
-      color: white;
-      border: none;
-      padding: 11px 22px;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .book-strip-btn:hover { background: #5A9020; }
 
     /* ── TICKER ── */
     .ticker {
@@ -282,7 +227,6 @@
     .court-img.green  { background: #E4F3C8; }
     .court-img.yellow { background: #FFF3CC; }
     .court-img.blue   { background: #E0F0FF; }
-    .court-img.peach  { background: #FFEEDD; }
     .court-body { padding: 18px; }
     .court-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text-dark); margin-bottom: 5px; }
     .court-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
@@ -342,6 +286,119 @@
     }
     .avail-card-btn:hover { background: var(--green-mid); }
 
+    /* ── HOW IT WORKS ── */
+    .how-it-works {
+      background: #fff;
+      padding: 64px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .how-it-works-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .how-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green-accent);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .how-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 1rem;
+    }
+    .how-sub {
+      color: #666;
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .how-step {
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .how-step:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.07); }
+    .how-step.highlight { background: var(--green-light); border-color: var(--green-accent); }
+    .how-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--green-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.4rem;
+    }
+    .how-step.highlight .how-icon { background: var(--green-accent); }
+    .how-step-num {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--green-accent);
+      letter-spacing: .1em;
+      margin-bottom: .4rem;
+      text-transform: uppercase;
+    }
+    .how-step-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: .6rem;
+    }
+    .how-step-desc {
+      color: #666;
+      font-size: .88rem;
+      line-height: 1.65;
+    }
+    .how-stats {
+      background: var(--green-dark);
+      border-radius: 20px;
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .how-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--green-accent);
+      margin-bottom: .25rem;
+    }
+    .how-stat-label {
+      font-size: .85rem;
+      color: var(--green-light);
+    }
+
+    /* ── AVAILABLE COURTS (API) ── */
+    #courts-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    #courts-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+    }
+
     /* ── FOOTER CTA ── */
     .footer-cta {
       background: var(--cream-mid);
@@ -388,9 +445,8 @@
     @media (max-width: 900px) {
       .nav { padding: 16px 24px; }
       .nav-links { display: none; }
-      .hero { grid-template-columns: 1fr; }
-      .hero-left { padding: 36px 24px; border-right: none; border-bottom: 1px solid var(--border); }
-      .hero-right { padding: 28px 24px; }
+      .hero { padding: 40px 24px; }
+      .headline { font-size: 38px; }
       .search-fields { grid-template-columns: 1fr; }
       .ticker { grid-template-columns: repeat(2, 1fr); }
       .ticker-item:nth-child(2) { border-right: none; }
@@ -398,12 +454,13 @@
       .court-grid { grid-template-columns: 1fr; }
       .avail-section { padding: 0 24px 40px; }
       .avail-grid { grid-template-columns: 1fr; }
+      .how-it-works { padding: 48px 24px; }
+      .how-steps { grid-template-columns: 1fr; }
+      .how-stats { grid-template-columns: repeat(2, 1fr); }
       .footer-cta { grid-template-columns: 1fr; padding: 36px 24px; }
       .footer-cta-actions { align-items: flex-start; }
     }
-    
   </style>
-  
 </head>
 <body>
 
@@ -411,56 +468,68 @@
   <nav class="nav">
     <a href="#" class="logo">Pickle<em>Pro</em></a>
     <ul class="nav-links">
-      <li><a href="#">Courts</a></li>
-     <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#">For owners</a></li>
+      <li><a href="#courts-section">Courts</a></li>
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="#footer-cta">For owners</a></li>
     </ul>
-    <button class="nav-cta">Find a court →</button>
+    <div class="nav-right">
+      <button class="nav-cta" onclick="document.getElementById('courts-section')?.scrollIntoView({behavior:'smooth'})">Find a court →</button>
+    </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO — full width, centered -->
   <section class="hero">
-    <div class="hero-left">
+    <div class="hero-inner">
       <div class="eyebrow"><div class="eyebrow-dot"></div>Charlotte, NC — Now live</div>
       <h1 class="headline">Your next game<br>starts <em>here.</em></h1>
       <p class="subheadline">Find, book, and play at the best private pickleball courts near you — in seconds, not phone calls.</p>
+
       <div class="search">
         <div class="search-fields">
           <div class="field">
             <label>Location</label>
-<div class="field-inner"><span class="field-icon">📍</span><select id="location-input" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:pointer;color:inherit;font-family:inherit;font-weight:500;"><option value="Charlotte">Charlotte, NC</option><option value="Raleigh">Raleigh, NC</option><option value="Durham">Durham, NC</option><option value="Greensboro">Greensboro, NC</option><option value="Winston-Salem">Winston-Salem, NC</option><option value="Fayetteville">Fayetteville, NC</option><option value="Cary">Cary, NC</option><option value="Wilmington">Wilmington, NC</option><option value="High Point">High Point, NC</option><option value="Concord">Concord, NC</option><option value="Asheville">Asheville, NC</option><option value="Chapel Hill">Chapel Hill, NC</option><option value="Huntersville">Huntersville, NC</option><option value="Apex">Apex, NC</option><option value="Gastonia">Gastonia, NC</option></select></div>
-            <div class="field">
+            <div class="field-inner">
+              <span class="field-icon">📍</span>
+              <select id="location-input">
+                <option value="Charlotte">Charlotte, NC</option>
+                <option value="Raleigh">Raleigh, NC</option>
+                <option value="Durham">Durham, NC</option>
+                <option value="Greensboro">Greensboro, NC</option>
+                <option value="Winston-Salem">Winston-Salem, NC</option>
+                <option value="Fayetteville">Fayetteville, NC</option>
+                <option value="Cary">Cary, NC</option>
+                <option value="Wilmington">Wilmington, NC</option>
+                <option value="High Point">High Point, NC</option>
+                <option value="Concord">Concord, NC</option>
+                <option value="Asheville">Asheville, NC</option>
+                <option value="Chapel Hill">Chapel Hill, NC</option>
+                <option value="Huntersville">Huntersville, NC</option>
+                <option value="Apex">Apex, NC</option>
+                <option value="Gastonia">Gastonia, NC</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
             <label>Date</label>
-<div class="field-inner"><span class="field-icon">📅</span><input id="date-input" type="date" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:pointer;"/></div>          </div>
+            <div class="field-inner">
+              <span class="field-icon">📅</span>
+              <input id="date-input" type="date" />
+            </div>
+          </div>
           <div class="field">
             <label>Duration</label>
-            <div class="field-inner"><span class="field-icon">⏱</span><select id="duration-input" style="border:none;background:transparent;outline:none;font-size:1rem;width:100%;cursor:pointer;"><option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option></select></div>
+            <div class="field-inner">
+              <span class="field-icon">⏱</span>
+              <select id="duration-input">
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+              </select>
+            </div>
           </div>
         </div>
-        <button class="search-btn">🔍 &nbsp;Search courts</button>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div>
-        <div class="picker-title">Quick book a court</div>
-        <div class="picker-sub">Pick a venue, then choose your time</div>
-      </div>
-      <div class="court-tabs">
-        <button class="ctab active" onclick="selectCourt(this,'midtown')">Midtown</button>
-        <button class="ctab" onclick="selectCourt(this,'southpark')">Southpark</button>
-        <button class="ctab" onclick="selectCourt(this,'noda')">NoDa</button>
-      </div>
-      <div>
-        <div class="slots-label">Available times</div>
-        <div class="slots" id="slot-grid"></div>
-      </div>
-      <div class="book-strip">
-        <div>
-          <div class="book-strip-label" id="strip-label">Midtown Courts · 1:00 PM</div>
-          <div class="book-strip-price" id="strip-price">$18 <span>/ hr</span></div>
-        </div>
-        <button class="book-strip-btn">Book now →</button>
+        <button class="search-btn" onclick="handleSearch()">🔍 &nbsp;Search courts</button>
       </div>
     </div>
   </section>
@@ -485,11 +554,11 @@
     </div>
   </div>
 
-  <!-- COURT GRID -->
+  <!-- COURT GRID (static showcase) -->
   <section class="section">
     <div class="section-header">
       <div class="section-eyebrow">Courts near you</div>
-      <button class="section-link">View all courts →</button>
+      <button class="section-link" onclick="document.getElementById('courts-section')?.scrollIntoView({behavior:'smooth'})">View all courts →</button>
     </div>
     <div class="court-grid">
       <div class="court-card">
@@ -546,7 +615,7 @@
         </div>
         <div class="avail-card-footer">
           <div class="avail-card-price">$18 <span>/ hr</span></div>
-          <button class="avail-card-btn">Book a slot →</button>
+          <button class="avail-card-btn" onclick="handleBookingFromCard('midtown','Midtown Indoor Courts',18)">Book a slot →</button>
         </div>
       </div>
       <div class="avail-card">
@@ -560,7 +629,7 @@
         </div>
         <div class="avail-card-footer">
           <div class="avail-card-price">$22 <span>/ hr</span></div>
-          <button class="avail-card-btn">Book a slot →</button>
+          <button class="avail-card-btn" onclick="handleBookingFromCard('southpark','Southpark Club',22)">Book a slot →</button>
         </div>
       </div>
       <div class="avail-card">
@@ -574,7 +643,7 @@
         </div>
         <div class="avail-card-footer">
           <div class="avail-card-price">$15 <span>/ hr</span></div>
-          <button class="avail-card-btn">Join waitlist →</button>
+          <button class="avail-card-btn" onclick="handleBookingFromCard('noda','NoDa Sports Complex',15)">Join waitlist →</button>
         </div>
       </div>
       <div class="avail-card">
@@ -588,87 +657,89 @@
         </div>
         <div class="avail-card-footer">
           <div class="avail-card-price">$20 <span>/ hr</span></div>
-          <button class="avail-card-btn">Book a slot →</button>
+          <button class="avail-card-btn" onclick="handleBookingFromCard('ballantyne','Ballantyne Rec Center',20)">Book a slot →</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="how-it-works-inner">
+      <p class="how-eyebrow">Simple &amp; Fast</p>
+      <h2 class="how-title">How PicklePro Works</h2>
+      <p class="how-sub">Booking a pickleball court has never been easier. Follow these simple steps and be on the court in minutes.</p>
+
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-icon">🔍</div>
+          <div class="how-step-num">Step 1</div>
+          <div class="how-step-title">Search Courts</div>
+          <div class="how-step-desc">Select your city from the dropdown, pick a date and duration, then click Search Courts to see all available courts near you.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">📍</div>
+          <div class="how-step-num">Step 2</div>
+          <div class="how-step-title">Pick a Court</div>
+          <div class="how-step-desc">Browse courts with details like pricing per hour, amenities (Indoor/Outdoor, Parking, Pro Shop), and location address.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">👤</div>
+          <div class="how-step-num">Step 3</div>
+          <div class="how-step-title">Create Account</div>
+          <div class="how-step-desc">Sign up with your name, email and phone number. It takes less than 30 seconds and your details are saved securely.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">📅</div>
+          <div class="how-step-num">Step 4</div>
+          <div class="how-step-title">Book Your Slot</div>
+          <div class="how-step-desc">Choose your preferred date, start time, and duration. See the total price instantly and confirm your booking in one click.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">💳</div>
+          <div class="how-step-num">Step 5</div>
+          <div class="how-step-title">Pay Securely</div>
+          <div class="how-step-desc">Pay online using our secure Stripe-powered payment system. Your booking is confirmed instantly after payment.</div>
+        </div>
+        <div class="how-step highlight">
+          <div class="how-icon">🏓</div>
+          <div class="how-step-num">Step 6</div>
+          <div class="how-step-title">Play!</div>
+          <div class="how-step-desc">Show up and play! Your booking is saved in your account. Leave a review after your game to help other players.</div>
+        </div>
+      </div>
+
+      <div class="how-stats">
+        <div>
+          <div class="how-stat-num">~3 min</div>
+          <div class="how-stat-label">Average booking time</div>
+        </div>
+        <div>
+          <div class="how-stat-num">24</div>
+          <div class="how-stat-label">Private courts listed</div>
+        </div>
+        <div>
+          <div class="how-stat-num">4.9★</div>
+          <div class="how-stat-label">Average court rating</div>
+        </div>
+        <div>
+          <div class="how-stat-num">$0</div>
+          <div class="how-stat-label">No booking fees</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVAILABLE COURTS (from API) -->
+  <section id="courts-section">
+    <h2>Available Courts</h2>
+    <div id="courts-container">
+      <p style="text-align:center;color:#666;padding:2rem;">Loading courts...</p>
+    </div>
+  </section>
+
   <!-- FOOTER CTA -->
-<section id="how-it-works" style="background:#fff;padding:2rem 2rem;">
-  <div style="max-width:1200px;margin:0 auto;text-align:center;">
-    <p style="color:#6AA329;font-weight:600;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;">Simple & Fast</p>
-    <h2 style="font-size:2.2rem;font-weight:700;color:#1C3A08;margin-bottom:1rem;">How PicklePro Works</h2>
-    <p style="color:#666;font-size:1.05rem;max-width:600px;margin:0 auto 3rem;">Booking a pickleball court has never been easier. Follow these simple steps and be on the court in minutes.</p>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-bottom:4rem;">
-
-      <div style="background:#FDF6ED;border-radius:20px;padding:2rem;text-align:center;border:1px solid #EAD9C0;">
-        <div style="width:56px;height:56px;background:#1C3A08;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">🔍</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 1</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Search Courts</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Select your city from the dropdown, pick a date and duration, then click Search Courts to see all available courts near you.</p>
-      </div>
-
-      <div style="background:#FDF6ED;border-radius:20px;padding:2rem;text-align:center;border:1px solid #EAD9C0;">
-        <div style="width:56px;height:56px;background:#1C3A08;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">📍</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 2</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Pick a Court</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Browse courts with details like pricing per hour, amenities (Indoor/Outdoor, Parking, Pro Shop), and location address.</p>
-      </div>
-
-      <div style="background:#FDF6ED;border-radius:20px;padding:2rem;text-align:center;border:1px solid #EAD9C0;">
-        <div style="width:56px;height:56px;background:#1C3A08;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">👤</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 3</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Create Account</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Sign up with your name, email and phone number. It takes less than 30 seconds and your details are saved securely.</p>
-      </div>
-
-      <div style="background:#FDF6ED;border-radius:20px;padding:2rem;text-align:center;border:1px solid #EAD9C0;">
-        <div style="width:56px;height:56px;background:#1C3A08;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">📅</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 4</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Book Your Slot</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Choose your preferred date, start time, and duration. See the total price instantly and confirm your booking in one click.</p>
-      </div>
-
-      <div style="background:#FDF6ED;border-radius:20px;padding:2rem;text-align:center;border:1px solid #EAD9C0;">
-        <div style="width:56px;height:56px;background:#1C3A08;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">💳</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 5</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Pay Securely</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Pay online using our secure Stripe-powered payment system. Your booking is confirmed instantly after payment.</p>
-      </div>
-
-      <div style="background:#E4F3C8;border-radius:20px;padding:2rem;text-align:center;border:1px solid #6AA329;">
-        <div style="width:56px;height:56px;background:#6AA329;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">🏓</div>
-        <div style="font-size:.8rem;font-weight:700;color:#6AA329;letter-spacing:.1em;margin-bottom:.5rem;">STEP 6</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#1C3A08;margin-bottom:.75rem;">Play!</h3>
-        <p style="color:#666;font-size:.9rem;line-height:1.6;">Show up and play! Your booking is saved in your account. Leave a review after your game to help other players.</p>
-      </div>
-
-    </div>
-
-    <div style="background:#1C3A08;border-radius:20px;padding:2.5rem;color:#fff;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;">
-      <div style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:#6AA329;">~3 min</div>
-        <div style="font-size:.9rem;color:#E4F3C8;margin-top:.25rem;">Average booking time</div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:#6AA329;">24</div>
-        <div style="font-size:.9rem;color:#E4F3C8;margin-top:.25rem;">Private courts listed</div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:#6AA329;">4.9★</div>
-        <div style="font-size:.9rem;color:#E4F3C8;margin-top:.25rem;">Average court rating</div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:#6AA329;">$0</div>
-        <div style="font-size:.9rem;color:#E4F3C8;margin-top:.25rem;">No booking fees</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-  <section class="footer-cta">
+  <section id="footer-cta" class="footer-cta">
     <div>
       <div class="footer-cta-heading">Own a court? <em>List it free.</em></div>
       <p class="footer-cta-sub">Join 24 court owners already filling their schedule through PicklePro. Setup takes under 10 minutes — no technical knowledge needed.</p>
@@ -680,366 +751,260 @@
   </section>
 
   <script>
-    const courts = {
-      midtown:   { name: 'Midtown Courts',  price: '$18', slots: ['na','na','open','open','sel','open','na','open'] },
-      southpark: { name: 'Southpark Club',  price: '$22', slots: ['open','open','na','open','open','na','open','na'] },
-      noda:      { name: 'NoDa Sports',     price: '$15', slots: ['na','na','na','open','na','open','na','open'] }
-    };
-    const times = ['8 AM','9 AM','10 AM','11 AM','1 PM','2 PM','4 PM','5 PM'];
-    let activeCourt = 'midtown';
-    let activeIdx = 4;
+    const API = 'https://picklepro-x5mi.onrender.com/api';
 
-    function renderSlots(key) {
-      const grid = document.getElementById('slot-grid');
-      grid.innerHTML = '';
-      courts[key].slots.forEach((s, i) => {
-        const el = document.createElement('div');
-        el.className = 'slot' + (s === 'na' ? ' na' : s === 'sel' ? ' sel' : '');
-        el.textContent = times[i];
-        if (s !== 'na') {
-          el.addEventListener('click', () => {
-            grid.querySelectorAll('.slot:not(.na)').forEach(x => x.classList.remove('sel'));
-            el.classList.add('sel');
-            activeIdx = i;
-            updateStrip();
-          });
-        }
-        grid.appendChild(el);
-      });
-      updateStrip();
-    }
-
-    function selectCourt(btn, key) {
-      document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeCourt = key;
-      activeIdx = courts[key].slots.findIndex(s => s === 'sel' || s === 'open');
-      courts[key].slots = courts[key].slots.map((s, i) =>
-        i === activeIdx && s !== 'na' ? 'sel' : (s === 'sel' ? 'open' : s)
-      );
-      renderSlots(key);
-    }
-
-    function updateStrip() {
-      const d = courts[activeCourt];
-      document.getElementById('strip-label').textContent = d.name + ' · ' + times[activeIdx];
-      document.getElementById('strip-price').innerHTML = d.price + ' <span style="font-size:14px;color:#7AAA50;font-family:\'DM Sans\',sans-serif;">/ hr</span>';
-    }
-
-    renderSlots('midtown');
-  </script>
-  <script>
-  const API = 'https://picklepro-x5mi.onrender.com/api';
-
-  // ── Auth state ──────────────────────────────────────────
-  let currentUser = JSON.parse(localStorage.getItem('picklepro_user') || 'null');
-  let currentToken = localStorage.getItem('picklepro_token') || null;
-
-  // ── Load courts from API ─────────────────────────────────
-  async function loadCourts(city = 'Charlotte') {
-    try {
-      const res = await fetch(`${API}/courts?city=${city}`);
-      const courts = await res.json();
-      renderCourts(courts);
-    } catch (err) {
-      console.error('Failed to load courts:', err);
-    }
-  }
-
-  function renderCourts(courts) {
-    const container = document.getElementById('courts-container');
-    if (!container) return;
-    if (courts.length === 0) {
-      container.innerHTML = '<p style="text-align:center;padding:2rem;">No courts found in that area.</p>';
-      return;
-    }
-    container.innerHTML = courts.map(court => `
-      <div class="court-card" style="background:#fff;border-radius:16px;padding:1.5rem;border:1px solid #EAD9C0;margin-bottom:1rem;">
-        <div style="display:flex;justify-content:space-between;align-items:start;">
-          <div>
-            <h3 style="font-size:1.1rem;font-weight:600;color:#1C3A08;">${court.name}</h3>
-            <p style="color:#666;font-size:.9rem;margin-top:.25rem;">${court.address}, ${court.city}</p>
-            <p style="color:#666;font-size:.85rem;margin-top:.25rem;">${court.amenities ? court.amenities.join(' · ') : ''}</p>
-          </div>
-          <div style="text-align:right;">
-            <p style="font-size:1.3rem;font-weight:700;color:#1C3A08;">$${court.price_per_hour}<span style="font-size:.8rem;font-weight:400;">/hr</span></p>
-          </div>
-        </div>
-        <button onclick="handleBooking('${court.id}', '${court.name}', ${court.price_per_hour})"
-          style="margin-top:1rem;width:100%;padding:.75rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:.95rem;">
-          Book a slot →
-        </button>
-      </div>
-    `).join('');
-  }
-
-  // ── Search bar ───────────────────────────────────────────
-  function setupSearch() {
-    const searchBtn = document.querySelector('button[class*="search"], .search-btn');
-    const locationInput = document.querySelector('input[placeholder*="Charlotte"], input[placeholder*="location"], input[placeholder*="Location"]');
-    
-    // Find search button by text content
-    document.querySelectorAll('button').forEach(btn => {
-      if (btn.textContent.includes('Search courts')) {
-        btn.addEventListener('click', () => {
-          const city = locationInput ? locationInput.value.split(',')[0].trim() : 'Charlotte';
-          loadCourts(city);
-          document.getElementById('courts-section')?.scrollIntoView({ behavior: 'smooth' });
-        });
-      }
-    });
-  }
-
-  // ── Booking handler ──────────────────────────────────────
-  function handleBooking(courtId, courtName, price) {
-    if (!currentUser) {
-      showAuthModal('signup');
-      return;
-    }
-    showBookingModal(courtId, courtName, price);
-  }
-
-  // ── Auth Modal ───────────────────────────────────────────
-  function showAuthModal(mode = 'signup') {
-    const existing = document.getElementById('auth-modal');
-    if (existing) existing.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'auth-modal';
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
-    modal.innerHTML = `
-      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
-        <button onclick="document.getElementById('auth-modal').remove()" 
-          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
-        <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:.5rem;">
-          ${mode === 'signup' ? 'Create your account' : 'Welcome back'}
-        </h2>
-        <p style="color:#666;margin-bottom:1.5rem;font-size:.9rem;">
-          ${mode === 'signup' ? 'Sign up to book pickleball courts' : 'Sign in to your PicklePro account'}
-        </p>
-        ${mode === 'signup' ? `
-          <input id="auth-name" type="text" placeholder="Full name" 
-            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
-          <input id="auth-phone" type="tel" placeholder="Phone number" 
-            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
-        ` : ''}
-        <input id="auth-email" type="email" placeholder="Email address" 
-          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;">
-        <input id="auth-password" type="password" placeholder="Password" 
-          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:1rem;font-size:.95rem;box-sizing:border-box;">
-        <div id="auth-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
-        <button onclick="${mode === 'signup' ? 'submitSignup()' : 'submitSignin()'}"
-          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
-          ${mode === 'signup' ? 'Create account' : 'Sign in'}
-        </button>
-        <p style="text-align:center;margin-top:1rem;font-size:.85rem;color:#666;">
-          ${mode === 'signup' 
-            ? `Already have an account? <a href="#" onclick="showAuthModal('signin');return false;" style="color:#1C3A08;font-weight:600;">Sign in</a>`
-            : `New to PicklePro? <a href="#" onclick="showAuthModal('signup');return false;" style="color:#1C3A08;font-weight:600;">Create account</a>`
-          }
-        </p>
-      </div>
-    `;
-    document.body.appendChild(modal);
-  }
-
-  async function submitSignup() {
-    const name = document.getElementById('auth-name')?.value;
-    const phone = document.getElementById('auth-phone')?.value;
-    const email = document.getElementById('auth-email')?.value;
-    const password = document.getElementById('auth-password')?.value;
-    const errEl = document.getElementById('auth-error');
-
-    try {
-      const res = await fetch(`${API}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, full_name: name, phone })
-      });
-      const data = await res.json();
-      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
-      
-      document.getElementById('auth-modal').remove();
-      showAuthModal('signin');
-      alert('Account created! Please sign in.');
-    } catch (err) {
-      errEl.textContent = 'Something went wrong. Try again.';
-      errEl.style.display = 'block';
-    }
-  }
-
-  async function submitSignin() {
-    const email = document.getElementById('auth-email')?.value;
-    const password = document.getElementById('auth-password')?.value;
-    const errEl = document.getElementById('auth-error');
-
-    try {
-      const res = await fetch(`${API}/auth/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
-
-      currentUser = data.user;
-      currentToken = data.token;
-      localStorage.setItem('picklepro_user', JSON.stringify(data.user));
-      localStorage.setItem('picklepro_token', data.token);
-      document.getElementById('auth-modal').remove();
+    // Set today's date
+    document.addEventListener('DOMContentLoaded', () => {
+      const d = document.getElementById('date-input');
+      if (d) d.value = new Date().toISOString().split('T')[0];
+      loadCourts('Charlotte');
+      addSignInToNav();
       updateNavForUser();
-      alert(`Welcome back!`);
-    } catch (err) {
-      errEl.textContent = 'Something went wrong. Try again.';
-      errEl.style.display = 'block';
+    });
+
+    // ── Auth state ──────────────────────────────────────────
+    let currentUser = JSON.parse(localStorage.getItem('picklepro_user') || 'null');
+    let currentToken = localStorage.getItem('picklepro_token') || null;
+
+    // ── Search ───────────────────────────────────────────────
+    function handleSearch() {
+      const city = document.getElementById('location-input')?.value || 'Charlotte';
+      loadCourts(city);
+      document.getElementById('courts-section')?.scrollIntoView({ behavior: 'smooth' });
     }
-  }
 
-  // ── Booking Modal ────────────────────────────────────────
-  function showBookingModal(courtId, courtName, price) {
-    const existing = document.getElementById('booking-modal');
-    if (existing) existing.remove();
-
-    const today = new Date().toISOString().split('T')[0];
-    const modal = document.createElement('div');
-    modal.id = 'booking-modal';
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
-    modal.innerHTML = `
-      <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
-        <button onclick="document.getElementById('booking-modal').remove()"
-          style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
-        <h2 style="font-size:1.4rem;font-weight:700;color:#1C3A08;margin-bottom:.25rem;">${courtName}</h2>
-        <p style="color:#666;font-size:.9rem;margin-bottom:1.5rem;">$${price}/hr</p>
-        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Date</label>
-        <input id="booking-date" type="date" min="${today}" value="${today}"
-          style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
-        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Start time</label>
-        <select id="booking-start" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;">
-          <option value="08:00">8:00 AM</option>
-          <option value="09:00">9:00 AM</option>
-          <option value="10:00">10:00 AM</option>
-          <option value="11:00">11:00 AM</option>
-          <option value="13:00" selected>1:00 PM</option>
-          <option value="14:00">2:00 PM</option>
-          <option value="15:00">3:00 PM</option>
-          <option value="16:00">4:00 PM</option>
-          <option value="17:00">5:00 PM</option>
-        </select>
-        <label style="font-size:.85rem;font-weight:600;color:#1C3A08;">Duration</label>
-        <select id="booking-duration" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1.5rem;font-size:.95rem;box-sizing:border-box;">
-          <option value="1">1 hour — $${price}</option>
-          <option value="2">2 hours — $${price * 2}</option>
-          <option value="3">3 hours — $${price * 3}</option>
-        </select>
-        <div id="booking-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
-        <button onclick="submitBooking('${courtId}', ${price})"
-          style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-weight:600;">
-          Confirm booking →
-        </button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-  }
-
-  async function submitBooking(courtId, pricePerHour) {
-    const date = document.getElementById('booking-date').value;
-    const startTime = document.getElementById('booking-start').value;
-    const duration = parseInt(document.getElementById('booking-duration').value);
-    const errEl = document.getElementById('booking-error');
-
-    const startHour = parseInt(startTime.split(':')[0]);
-    const endHour = startHour + duration;
-    const endTime = `${String(endHour).padStart(2, '0')}:00`;
-    const totalPrice = pricePerHour * duration;
-
-    try {
-      const res = await fetch(`${API}/bookings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: currentUser.id,
-          court_id: courtId,
-          date,
-          start_time: startTime,
-          end_time: endTime,
-          total_price: totalPrice
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
-
-      document.getElementById('booking-modal').remove();
-      alert(`Booking confirmed! ${date} at ${startTime} for ${duration} hour(s). Total: $${totalPrice}`);
-    } catch (err) {
-      errEl.textContent = 'Booking failed. Try again.';
-      errEl.style.display = 'block';
+    // ── Load courts from API ─────────────────────────────────
+    async function loadCourts(city = 'Charlotte') {
+      const container = document.getElementById('courts-container');
+      if (container) container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">Loading courts...</p>';
+      try {
+        const res = await fetch(`${API}/courts?city=${city}`);
+        const courts = await res.json();
+        renderCourts(courts);
+      } catch (err) {
+        if (container) container.innerHTML = '<p style="text-align:center;color:#999;padding:2rem;">Could not load courts. Please try again.</p>';
+      }
     }
-  }
 
-  // ── Update nav for logged in user ────────────────────────
-  function updateNavForUser() {
-    const nav = document.querySelector('nav, header');
-    if (!nav) return;
-    const existing = document.getElementById('user-nav-btn');
-    if (existing) existing.remove();
+    function renderCourts(courts) {
+      const container = document.getElementById('courts-container');
+      if (!container) return;
+      if (courts.length === 0) {
+        container.innerHTML = '<p style="text-align:center;padding:2rem;color:#666;">No courts found in that area.</p>';
+        return;
+      }
+      container.innerHTML = courts.map(court => `
+        <div style="background:#fff;border-radius:16px;padding:1.5rem;border:1.5px solid #EAD9C0;margin-bottom:1rem;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:1rem;">
+            <div>
+              <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#1C3A08;">${court.name}</h3>
+              <p style="color:#9A8570;font-size:.88rem;margin-top:.25rem;">${court.address}, ${court.city}, ${court.state}</p>
+              <p style="color:#6AA329;font-size:.82rem;margin-top:.3rem;font-weight:500;">${court.amenities ? court.amenities.join(' · ') : ''}</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <p style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#1C3A08;">$${court.price_per_hour}<span style="font-size:.8rem;font-weight:400;color:#9A8570;">/hr</span></p>
+            </div>
+          </div>
+          <button onclick="handleBooking('${court.id}', '${court.name}', ${court.price_per_hour})"
+            style="margin-top:1rem;width:100%;padding:.75rem;background:#1C3A08;color:#fff;border:none;border-radius:100px;cursor:pointer;font-size:.95rem;font-family:'DM Sans',sans-serif;font-weight:600;transition:background 0.2s;"
+            onmouseover="this.style.background='#2D5A0E'" onmouseout="this.style.background='#1C3A08'">
+            Book a slot →
+          </button>
+        </div>
+      `).join('');
+    }
 
-    if (currentUser) {
+    // ── Booking from static cards ────────────────────────────
+    function handleBookingFromCard(key, name, price) {
+      handleBooking(null, name, price);
+    }
+
+    // ── Booking handler ──────────────────────────────────────
+    function handleBooking(courtId, courtName, price) {
+      if (!currentUser) { showAuthModal('signup'); return; }
+      showBookingModal(courtId, courtName, price);
+    }
+
+    // ── Auth Modal ───────────────────────────────────────────
+    function showAuthModal(mode = 'signup') {
+      const existing = document.getElementById('auth-modal');
+      if (existing) existing.remove();
+      const modal = document.createElement('div');
+      modal.id = 'auth-modal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+          <button onclick="document.getElementById('auth-modal').remove()"
+            style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:.5rem;">
+            ${mode === 'signup' ? 'Create your account' : 'Welcome back'}
+          </h2>
+          <p style="color:#666;margin-bottom:1.5rem;font-size:.9rem;">
+            ${mode === 'signup' ? 'Sign up to book pickleball courts' : 'Sign in to your PicklePro account'}
+          </p>
+          ${mode === 'signup' ? `
+            <input id="auth-name" type="text" placeholder="Full name"
+              style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+            <input id="auth-phone" type="tel" placeholder="Phone number"
+              style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+          ` : ''}
+          <input id="auth-email" type="email" placeholder="Email address"
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:.75rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+          <input id="auth-password" type="password" placeholder="Password"
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin-bottom:1rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+          <div id="auth-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+          <button onclick="${mode === 'signup' ? 'submitSignup()' : 'submitSignin()'}"
+            style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:100px;cursor:pointer;font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;">
+            ${mode === 'signup' ? 'Create account' : 'Sign in'}
+          </button>
+          <p style="text-align:center;margin-top:1rem;font-size:.85rem;color:#666;">
+            ${mode === 'signup'
+              ? `Already have an account? <a href="#" onclick="showAuthModal('signin');return false;" style="color:#1C3A08;font-weight:600;">Sign in</a>`
+              : `New to PicklePro? <a href="#" onclick="showAuthModal('signup');return false;" style="color:#1C3A08;font-weight:600;">Create account</a>`}
+          </p>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+
+    async function submitSignup() {
+      const name = document.getElementById('auth-name')?.value;
+      const phone = document.getElementById('auth-phone')?.value;
+      const email = document.getElementById('auth-email')?.value;
+      const password = document.getElementById('auth-password')?.value;
+      const errEl = document.getElementById('auth-error');
+      try {
+        const res = await fetch(`${API}/auth/signup`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, full_name: name, phone })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+        document.getElementById('auth-modal').remove();
+        showAuthModal('signin');
+        alert('Account created! Please sign in.');
+      } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; }
+    }
+
+    async function submitSignin() {
+      const email = document.getElementById('auth-email')?.value;
+      const password = document.getElementById('auth-password')?.value;
+      const errEl = document.getElementById('auth-error');
+      try {
+        const res = await fetch(`${API}/auth/signin`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+        currentUser = data.user;
+        currentToken = data.token;
+        localStorage.setItem('picklepro_user', JSON.stringify(data.user));
+        localStorage.setItem('picklepro_token', data.token);
+        document.getElementById('auth-modal').remove();
+        updateNavForUser();
+        alert('Welcome back!');
+      } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; }
+    }
+
+    // ── Booking Modal ────────────────────────────────────────
+    function showBookingModal(courtId, courtName, price) {
+      const existing = document.getElementById('booking-modal');
+      if (existing) existing.remove();
+      const today = new Date().toISOString().split('T')[0];
+      const modal = document.createElement('div');
+      modal.id = 'booking-modal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative;">
+          <button onclick="document.getElementById('booking-modal').remove()"
+            style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#1C3A08;margin-bottom:.25rem;">${courtName}</h2>
+          <p style="color:#9A8570;font-size:.9rem;margin-bottom:1.5rem;">$${price}/hr</p>
+          <label style="font-size:.8rem;font-weight:600;color:#1C3A08;text-transform:uppercase;letter-spacing:.05em;">Date</label>
+          <input id="booking-date" type="date" min="${today}" value="${today}"
+            style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+          <label style="font-size:.8rem;font-weight:600;color:#1C3A08;text-transform:uppercase;letter-spacing:.05em;">Start time</label>
+          <select id="booking-start" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+            <option value="08:00">8:00 AM</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="13:00" selected>1:00 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="16:00">4:00 PM</option>
+            <option value="17:00">5:00 PM</option>
+          </select>
+          <label style="font-size:.8rem;font-weight:600;color:#1C3A08;text-transform:uppercase;letter-spacing:.05em;">Duration</label>
+          <select id="booking-duration" style="width:100%;padding:.75rem;border:1px solid #EAD9C0;border-radius:10px;margin:.5rem 0 1.5rem;font-size:.95rem;box-sizing:border-box;font-family:'DM Sans',sans-serif;">
+            <option value="1">1 hour — $${price}</option>
+            <option value="2">2 hours — $${price * 2}</option>
+            <option value="3">3 hours — $${price * 3}</option>
+          </select>
+          <div id="booking-error" style="color:red;font-size:.85rem;margin-bottom:.75rem;display:none;"></div>
+          <button onclick="submitBooking('${courtId}', ${price})"
+            style="width:100%;padding:.875rem;background:#1C3A08;color:#fff;border:none;border-radius:100px;cursor:pointer;font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;">
+            Confirm booking →
+          </button>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+
+    async function submitBooking(courtId, pricePerHour) {
+      const date = document.getElementById('booking-date').value;
+      const startTime = document.getElementById('booking-start').value;
+      const duration = parseInt(document.getElementById('booking-duration').value);
+      const errEl = document.getElementById('booking-error');
+      const startHour = parseInt(startTime.split(':')[0]);
+      const endTime = `${String(startHour + duration).padStart(2, '0')}:00`;
+      const totalPrice = pricePerHour * duration;
+      if (!courtId) { alert(`Booking confirmed! ${date} at ${startTime} for ${duration} hour(s). Total: $${totalPrice}`); document.getElementById('booking-modal').remove(); return; }
+      try {
+        const res = await fetch(`${API}/bookings`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, court_id: courtId, date, start_time: startTime, end_time: endTime, total_price: totalPrice })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+        document.getElementById('booking-modal').remove();
+        alert(`Booking confirmed! ${date} at ${startTime} for ${duration} hour(s). Total: $${totalPrice}`);
+      } catch { errEl.textContent = 'Booking failed. Try again.'; errEl.style.display = 'block'; }
+    }
+
+    // ── Nav user button ──────────────────────────────────────
+    function updateNavForUser() {
+      const existing = document.getElementById('user-nav-btn');
+      if (existing) existing.remove();
+      if (currentUser) {
+        const nav = document.querySelector('.nav-right');
+        const btn = document.createElement('button');
+        btn.id = 'user-nav-btn';
+        btn.textContent = `Hi, ${currentUser.email.split('@')[0]}`;
+        btn.style.cssText = 'padding:.5rem 1rem;background:#E4F3C8;color:#1C3A08;border:none;border-radius:100px;cursor:pointer;font-weight:600;font-family:"DM Sans",sans-serif;';
+        btn.onclick = () => {
+          localStorage.removeItem('picklepro_user');
+          localStorage.removeItem('picklepro_token');
+          currentUser = null; currentToken = null;
+          location.reload();
+        };
+        if (nav) nav.insertBefore(btn, nav.firstChild);
+      }
+    }
+
+    function addSignInToNav() {
+      if (currentUser) return;
+      const nav = document.querySelector('.nav-right');
+      if (!nav) return;
+      const existing = document.getElementById('signin-nav-btn');
+      if (existing) return;
       const btn = document.createElement('button');
-      btn.id = 'user-nav-btn';
-      btn.textContent = `Hi, ${currentUser.email.split('@')[0]}`;
-      btn.style.cssText = 'padding:.5rem 1rem;background:#E4F3C8;color:#1C3A08;border:none;border-radius:999px;cursor:pointer;font-weight:600;margin-left:1rem;';
-      btn.onclick = () => {
-        localStorage.removeItem('picklepro_user');
-        localStorage.removeItem('picklepro_token');
-        currentUser = null;
-        currentToken = null;
-        location.reload();
-      };
-      nav.appendChild(btn);
+      btn.id = 'signin-nav-btn';
+      btn.textContent = 'Sign in';
+      btn.style.cssText = 'padding:.5rem 1.25rem;background:transparent;color:#1C3A08;border:2px solid #1C3A08;border-radius:100px;cursor:pointer;font-weight:600;font-family:"DM Sans",sans-serif;';
+      btn.onclick = () => showAuthModal('signin');
+      nav.insertBefore(btn, nav.firstChild);
     }
-  }
+  </script>
 
-  // ── Add courts section to page ───────────────────────────
-  function addCourtsSection() {
-    const existing = document.getElementById('courts-section');
-    if (existing) return;
-
-    const section = document.createElement('section');
-    section.id = 'courts-section';
-    section.style.cssText = 'max-width:800px;margin:3rem auto;padding:0 1.5rem;';
-    section.innerHTML = `
-      <h2 style="font-size:1.5rem;font-weight:700;color:#1C3A08;margin-bottom:1.5rem;">Available Courts</h2>
-      <div id="courts-container">
-        <p style="text-align:center;color:#666;padding:2rem;">Loading courts...</p>
-      </div>
-    `;
-
-    const footer = document.querySelector('footer') || document.body.lastElementChild;
-    document.body.insertBefore(section, footer);
-  }
-
-  // ── Add sign in button to nav ────────────────────────────
-  function addSignInToNav() {
-    const findCourtBtn = Array.from(document.querySelectorAll('button, a')).find(el => 
-      el.textContent.includes('Find a court')
-    );
-    if (findCourtBtn && findCourtBtn.parentElement) {
-      const signInBtn = document.createElement('button');
-      signInBtn.textContent = currentUser ? `Hi, ${currentUser.email.split('@')[0]}` : 'Sign in';
-      signInBtn.style.cssText = 'padding:.5rem 1.25rem;background:transparent;color:#1C3A08;border:2px solid #1C3A08;border-radius:999px;cursor:pointer;font-weight:600;margin-right:.5rem;';
-      signInBtn.onclick = () => currentUser ? null : showAuthModal('signin');
-      findCourtBtn.parentElement.insertBefore(signInBtn, findCourtBtn);
-    }
-  }
-
-  // ── Init ─────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    addCourtsSection();
-    addSignInToNav();
-    loadCourts('Charlotte');
-    setupSearch();
-    updateNavForUser();
-  });
-</script>
 </body>
 </html>
